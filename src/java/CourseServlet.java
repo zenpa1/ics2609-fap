@@ -11,26 +11,61 @@ import javax.servlet.http.*;
 
 public class CourseServlet extends HttpServlet {
     private Connection conn;
+
+    // Database credentials - CHANGE THESE TO YOUR VALUES
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/learning_platform";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "root";
     
     @Override
     public void init() throws ServletException {
+        // try {
+        //     Class.forName(getServletConfig().getInitParameter("jdbcSQLClassName"));
+        //     String username = getServletConfig().getInitParameter("dbSQLUserName");
+        //     String password = getServletConfig().getInitParameter("dbSQLPassword");
+        //     StringBuffer url = new StringBuffer(getServletConfig().getInitParameter("jdbcSQLDriverURL"))
+        //             .append("://")
+        //             .append(getServletConfig().getInitParameter("dbSQLHostName"))
+        //             .append(":")
+        //             .append(getServletConfig().getInitParameter("dbSQLPort"))
+        //             .append("/")
+        //             .append(getServletConfig().getInitParameter("databaseSQLName"))
+        //             .append("?useSSL=false&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=CONVERT_TO_NULL");
+        //     conn = DriverManager.getConnection(url.toString(), username, password);
+        //     System.out.println("Database connected!");
+        // } catch (SQLException | ClassNotFoundException ex) {
+        //     throw new ServletException("Database connection error: " + ex.getMessage());
+        // }
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+ 
+        Connection conn = null;
         try {
-            Class.forName(getServletConfig().getInitParameter("jdbcSQLClassName"));
-            String username = getServletConfig().getInitParameter("dbSQLUserName");
-            String password = getServletConfig().getInitParameter("dbSQLPassword");
-            StringBuffer url = new StringBuffer(getServletConfig().getInitParameter("jdbcSQLDriverURL"))
-                    .append("://")
-                    .append(getServletConfig().getInitParameter("dbSQLHostName"))
-                    .append(":")
-                    .append(getServletConfig().getInitParameter("dbSQLPort"))
-                    .append("/")
-                    .append(getServletConfig().getInitParameter("databaseSQLName"))
-                    .append("?useSSL=false&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=CONVERT_TO_NULL");
-            conn = DriverManager.getConnection(url.toString(), username, password);
-            System.out.println("Database connected!");
-        } catch (SQLException | ClassNotFoundException ex) {
-            throw new ServletException("Database connection error: " + ex.getMessage());
-        }
+            // Load MySQL JDBC Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+ 
+            // Attempt to establish connection
+            out.println("<h2>Connecting to database...</h2>");
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+ 
+            if (conn != null) {
+                out.println("<h2 style='color:green'>Connection successful!</h2>");
+                out.println("<p>Database: " + conn.getMetaData().getDatabaseProductName() + "</p>");
+                out.println("<p>Version: " + conn.getMetaData().getDatabaseProductVersion() + "</p>");
+            } else {
+                out.println("<h2 style='color:red'>Connection failed!</h2>");
+            }
+        } catch (ClassNotFoundException e) {
+            out.println("<h2 style='color:red'>MySQL JDBC Driver not found!</h2>");
+            e.printStackTrace(out);
+        } catch (SQLException e) {
+            out.println("<h2 style='color:red'>Connection failed!</h2>");
+            out.println("<p>SQLException: " + e.getMessage() + "</p>");
+            out.println("<p>SQLState: " + e.getSQLState() + "</p>");
+            out.println("<p>VendorError: " + e.getErrorCode() + "</p>");
+        } 
 
     }
     
