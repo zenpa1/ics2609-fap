@@ -3,13 +3,13 @@ CHECKLIST:
 ESTABLISH WEB.XML PARAMETERS || DONE
 ESTABLISH CONNECTION AND CLASS || DONE 
 1. DISPLAY COURSES ENROLLED USING SESSION || DONE
-RECHECK IF RESULT SET RETURNS CORRECT DATA || Working-ish T-T
+RECHECK IF RESULT SET RETURNS CORRECT DATA || DONE
 
 2. DISPLAY COURSES UNENROLLED USING SESSION || DONE
-SEE IF RESULT SET RETURNS CORRECT DATA || Unchecked
+SEE IF RESULT SET RETURNS CORRECT DATA || DONE
 
 3. ALLOW LEARNER TO ENROLL TO COURSE || DONE
-DOUBLE CHECK IN DB IF ITS ADDED || Unchecked
+DOUBLE CHECK IN DB IF ITS ADDED || DONE
 
 */
 import java.io.IOException;
@@ -93,7 +93,8 @@ public class LearnerCourseServlet extends HttpServlet {
     // Helper method to get available courses (not enrolled)
     private List<String> getAvailableCourses(String username) throws SQLException {
         List<String> courses = new ArrayList<>();
-        String query = "SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME != ?;";
+        String query = "SELECT COURSE_NAME FROM COURSEDB WHERE COURSE_NAME NOT IN " +
+                  "(SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME = ?)";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
