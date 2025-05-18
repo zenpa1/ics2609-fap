@@ -14,11 +14,11 @@
             </div>
             <div class="nav_list">
                 <a class="nav_item" href="instructor_dashboard.jsp">Dashboard</a>
-                <a class="nav_item" href="instructor_database.jsp">Learner's Database</a>
-                <a class="nav_item" href="instructor_schedule.jsp">Schedule</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/DatabaseServlet">Learner's Database</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ScheduleServlet?action=instructor">Schedule</a>
             </div>
             <div class="nav_logout">
-                <a class="nav_item" href="instructor_logout.jsp">Logout</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/view/instructor_logout.jsp">Logout</a>
             </div>
         </nav>
         <div class="site_layout_body"> 

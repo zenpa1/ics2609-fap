@@ -1,46 +1,62 @@
 <!-- Instructor's Database -->
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List,java.util.Map"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Instructor's Database</title>
     </head>
-    <body class="site_layout">
-        <nav class="site_layout_navbar">
-            <div class="nav_profile">
-                <a class="nav_item" href="instructor_profile.jsp">Username</a>
+    <body>
+        <nav>
+            <div>
+                <a href="instructor_profile.jsp">Username</a>
             </div>
-            <div class="nav_list">
-                <a class="nav_item" href="instructor_dashboard.jsp">Dashboard</a>
-                <a class="nav_item" href="instructor_database.jsp">Learner's Database</a>
-                <a class="nav_item" href="instructor_schedule.jsp">Schedule</a>
+            <div>
+                <a href="instructor_dashboard.jsp">Dashboard</a>
+                <a href="${pageContext.request.contextPath}/DatabaseServlet">Learner's Database</a>
+                <a href="${pageContext.request.contextPath}/ScheduleServlet?action=instructor">Schedule</a>
             </div>
-            <div class="nav_logout">
-                <a class="nav_item" href="instructor_logout.jsp">Logout</a>
+            <div>
+                <a href="${pageContext.request.contextPath}/view/instructor_logout.jsp">Logout</a>
             </div>
         </nav>
-        <div class="site_layout_body"> 
-            <div class="instructor_database_layout">
-                <div class="site_body_header_horizontal">
-                    <div class="site_body_header_left">
+        <div> 
+            <div>
+                <div>
+                    <div>
                         <h1>Account Database</h1>
                     </div>
-                    <div class="site_body_header_right">
-                        <button>Download Account Report</button> <!-- Insert Download Account Report Functionality Here -->
+                    <div>
+                        <button>Download Account Report</button>
                     </div>
                 </div>
-                <div class="instructor_database_main"> 
-                    <table class="instructor_database_table"> <!-- Insert Database Table Here -->
+                <div> 
+                    <table border="1">
                         <tr>
-                            <td>Username</td>
-                            <td>Role</td>
+                            <th>Username</th>
+                            <th>Role</th>
                         </tr>
+                        <%
+                            List<Map<String, String>> userList = (List<Map<String, String>>) request.getAttribute("userList");
+                            if (userList != null) {
+                                for (Map<String, String> user : userList) {
+                        %>
                         <tr>
-                            <td>Username</td>
-                            <td>Role</td>
+                            <td><%= user.get("username") %></td>
+                            <td><%= user.get("role") %></td>
                         </tr>
+                        <%
+                                }
+                            } else {
+                        %>
+                        <tr>
+                            <td colspan="2">No user data available</td>
+                        </tr>
+                        <%
+                            }
+                        %>
                     </table>
                 </div>
             </div>
