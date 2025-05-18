@@ -10,11 +10,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
 
 public class LoginServlet extends HttpServlet {
-   
+  
      protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        boolean captchaVerified = verifyRecaptcha(gRecaptchaResponse);
+        if (!captchaVerified) {
+            response.sendRedirect("view/error_401.jsp"); // Or a specific captcha error page
+            return;
+        }
+        
         // Retrieve user input
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -67,7 +79,38 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("view/error_401.jsp"); // yes, you failed.
         }
     }
-    
+     
+     private boolean verifyRecaptcha(String gRecaptchaResponse) {
+        String secret = "6LcuHD8rAAAAAMz-mX6-fnEI7XXBoYEseGihKRmb";
+        try {
+            String url = "https://www.google.com/recaptcha/api/siteverify";
+            String postParams = "secret=" + secret + "&response=" + gRecaptchaResponse;
+
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            OutputStream outStream = con.getOutputStream();
+            outStream.write(postParams.getBytes());
+            outStream.flush();
+            outStream.close();
+
+            Scanner in = new Scanner(con.getInputStream());
+            String jsonResponse = "";
+            while (in.hasNext()) {
+                jsonResponse += in.nextLine();
+            }
+            in.close();
+
+            return jsonResponse.contains("\"success\": true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+     
     protected String getContextParameter(String name) {
         return getServletContext().getInitParameter(name);
     }

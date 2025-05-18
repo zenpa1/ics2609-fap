@@ -1,49 +1,64 @@
+<%@page import="java.util.Map"%>
 <!-- Learner's Schedule -->
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Learner's Schedule</title>
     </head>
-    <body class="site_layout">
-        <nav class="site_layout_navbar">
-            <div class="nav_profile">
-                <a class="nav_item" href="learner_profile.jsp">Username</a>
+    <body>
+        <nav>
+            <div>
+                <a href="learner_profile.jsp">${sessionScope.username}</a>
             </div>
-            <div class="nav_list">
-                <a class="nav_item" href="learner_dashboard.jsp">Dashboard</a>
-                <a class="nav_item" href="learner_courses.jsp">Courses</a>
-                <a class="nav_item" href="learner_schedule.jsp">Schedule</a>
+            <div>
+                <a href="${pageContext.request.contextPath}/LearnerCourseServlet">Dashboard</a>
+                <a href="${pageContext.request.contextPath}/LearnerCourseServlet?action=viewAvailable">Courses</a>
+                <a href="${pageContext.request.contextPath}/ScheduleServlet?action=learner">Schedule</a>
             </div>
-            <div class="nav_logout">
-                <a class="nav_item"  href="learner_logout.jsp">Logout</a>
+            <div>
+                <a href="${pageContext.request.contextPath}/view/learner_logout.jsp">Logout</a>
             </div>
         </nav>
-        <div class="site_layout_body"> 
-            <div class="schedule_layout">
-                <div class="site_body_header_horizontal">
-                    <div class="site_body_header_left">
+        <div> 
+            <div>
+                <div>
+                    <div>
                         <h1>Schedule</h1>
                     </div>
-                    <div class="site_body_header_right">
-                        <button>Download Schedule</button> <!-- Insert Download Schedule Functionality Here -->
+                    <div>
+                        <button>Download Schedule</button>
                     </div>
                 </div>
-                <div class="schedule_main">
-                    <table class="schedule_table">
+                <div>
+                    <table border="1">
                         <tr>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Saturday</th>
+                            <th>Course Name</th>
+                            <th>Instructor</th>
+                            <th>Schedule</th>
                         </tr>
+                        <%
+                            List<Map<String, String>> courseList = (List<Map<String, String>>) request.getAttribute("courseList");
+                            if (courseList != null && !courseList.isEmpty()) {
+                                for (Map<String, String> course : courseList) {
+                        %>
                         <tr>
-                            <!-- Insert Schedule Here -->
+                            <td><%= course.get("name")%></td>
+                            <td><%= course.get("instructor")%></td>
+                            <td><%= course.get("schedule")%></td>
                         </tr>
+                        <%
+                            }
+                        } else {
+                        %>
+                        <tr>
+                            <td colspan="3">No courses scheduled</td>
+                        </tr>
+                        <%
+                            }
+                        %>
                     </table>
                 </div>
             </div>

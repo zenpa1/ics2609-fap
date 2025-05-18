@@ -15,7 +15,7 @@
             <div class="nav_list">
                 <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet">Dashboard</a>
                 <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet?action=viewAvailable">Courses</a>
-                <a class="nav_item" href="learner_schedule.jsp">Schedule</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ScheduleServlet?action=learner">Schedule</a>
             </div>
                 <h2>My Enrolled Courses</h2>
         
@@ -36,7 +36,7 @@
             }
         %>
             <div class="nav_logout">
-                <a class="nav_item"  href="learner_logout.jsp">Logout</a>
+                <a class="nav_item"  href="${pageContext.request.contextPath}/view/learner_logout.jsp">Logout</a>
             </div>
         </nav>
         <div class="site_layout_body"> 
