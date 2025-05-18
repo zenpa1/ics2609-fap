@@ -288,6 +288,12 @@ input[type="username"], input[type="password"] {
     font-weight: 400;
 }
 
+.g-recaptcha {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+}
+
 .signup, .login-link{
     margin-top: 20px;
     font-size: 16px;
