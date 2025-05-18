@@ -1,0 +1,72 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DatabaseConnector {
+    public Connection connection;
+	
+	/**
+	 * Initialize a DatabaseConnector instance
+	 * 
+	 * @usage
+	 * ```java
+	 * // get an instance and assign to `db`
+	 * DatabaseConnector db = new DatabaseConnector();
+	 * 
+	 * // initialize the instance with connection info
+	 * db.init(jdbcClassName, jdbcDriverURL, dbHostName, dbPort, dbName, dbUsername, dbPassword);
+	 * ```
+	 */
+    public void init(String jdbcClassName, String jdbcDriverURL, String dbHostName, String dbPort, String dbName, String dbUsername, String dbPassword) {
+        try {
+            Class.forName(jdbcClassName);
+            String url = jdbcDriverURL + "://" + dbHostName + ":" + dbPort + "/" + dbName;
+            connection = DriverManager.getConnection(url, dbUsername, dbPassword);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+	public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	/**
+	 * Convert a String to a query and run that query on the database
+	 * 
+	 * @usage
+	 * ```java
+	 * // get the instance
+	 * DatabaseConnector db = DatabaseConnector.getInstance();
+	 * 
+	 * // run a query
+	 * String query = "SELECT * FROM USER_INFO"
+	 * ResultSet users = db.runQuery(query);
+	 * 
+	 * // handle data
+	 * while (users.next()) {
+	 *     // do stuff
+	 * }
+	 * ``` 
+	 * @param query
+	 * @return 
+	 */
+    public ResultSet runQuery(String query) {
+        // Create and Execute the Statement
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+	
+}
