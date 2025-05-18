@@ -49,7 +49,7 @@ public class LearnerCourseServlet extends HttpServlet {
         String username = "user1@example.com"; // Replace with session username getter LATER T_T 
         
         try {
-            if (action == null || action.equals("viewEnrolled")) {
+            if (action == null) {
                 // Function 1: Display enrolled courses
                 List<String> enrolledCourses = getEnrolledCourses(username);
                 request.setAttribute("enrolledCourses", enrolledCourses);
@@ -93,7 +93,7 @@ public class LearnerCourseServlet extends HttpServlet {
     // Helper method to get available courses (not enrolled)
     private List<String> getAvailableCourses(String username) throws SQLException {
         List<String> courses = new ArrayList<>();
-        String query = "SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME NOT IN = ?)";
+        String query = "SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME != ?;";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
