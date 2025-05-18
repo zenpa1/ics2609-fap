@@ -1,5 +1,6 @@
 <!-- Learner's Courses -->
 
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,8 +14,8 @@
                 <a class="nav_item" href="learner_profile.jsp">Username</a>
             </div>
             <div class="nav_list">
-                <a class="nav_item" href="learner_dashboard.jsp">Dashboard</a>
-                <a class="nav_item" href="learner_courses.jsp">Courses</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet">Dashboard</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet?action=viewAvailable">Courses</a>
                 <a class="nav_item" href="learner_schedule.jsp">Schedule</a>
             </div>
             <div class="nav_logout">
@@ -26,6 +27,29 @@
                 <div class="site_body_header_vertical">
                     <h1>Courses Catalog</h1>
                     <p>Enroll to new courses</p>
+                    <%
+            List<String> availableCourses = (List<String>)request.getAttribute("availableCourses");
+            if (availableCourses != null && !availableCourses.isEmpty()) {
+        %>
+                <ul>
+                <% for (String course : availableCourses) { %>
+                    <li>
+                        <%= course %>
+                        <form action="LearnerCourseServlet" method="POST" style="display:inline">
+                            <input type="hidden" name="action" value="enroll">
+                            <input type="hidden" name="courseName" value="<%= course %>">
+                            <input type="submit" href= "${pageContext.request.contextPath}/LearnerCourseServlet?action=enroll" value="Enroll">
+                        </form>
+                    </li>
+                <% } %>
+                </ul>
+        <%
+            } else {
+        %>
+                <p>No available courses found or you're enrolled in all courses.</p>
+        <%
+            }
+        %>
                 </div>
                 <h2>Trending learning paths and courses</h2>
                 <div class="learner_courses_main">
