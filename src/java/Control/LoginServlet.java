@@ -20,12 +20,12 @@ public class LoginServlet extends HttpServlet {
      protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-         boolean captchaVerified = verifyRecaptcha(gRecaptchaResponse);
-         if (!captchaVerified) {
-             response.sendRedirect("view/error_401.jsp"); // Or a specific captcha error page
-             return;
-         }
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        boolean captchaVerified = verifyRecaptcha(gRecaptchaResponse);
+        if (!captchaVerified) {
+            response.sendRedirect("view/error_401.jsp"); // Or a specific captcha error page
+            return;
+        }
         
         // Retrieve user input
         String username = request.getParameter("username");
