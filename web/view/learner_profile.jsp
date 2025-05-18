@@ -1,5 +1,5 @@
 <!-- Learner's Profile -->
-
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -10,11 +10,11 @@
     <body class="site_layout">
         <nav class="site_layout_navbar">
             <div class="nav_profile">
-                <a class="nav_item" href="learner_profile.jsp">Username</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ProfileServlet?action=learner">Username</a>
             </div>
             <div class="nav_list">
-                <a class="nav_item" href="learner_dashboard.jsp">Dashboard</a>
-                <a class="nav_item" href="learner_courses.jsp">Courses</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet">Dashboard</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet?action=viewAvailable">Courses</a>
                 <a class="nav_item" href="learner_schedule.jsp">Schedule</a>
             </div>
             <div class="nav_logout">
@@ -37,7 +37,23 @@
                     <a>
                         <div class="profile_courses_box"> </div>
                     </a>
-                    <a>
+                    <a>        
+                <%
+                    List<String> enrolledCourses = (List<String>)request.getAttribute("enrolledCourses");
+                    if (enrolledCourses != null && !enrolledCourses.isEmpty()) {
+                %>
+                        <ul>
+                        <% for (String course : enrolledCourses) { %>
+                            <li><%= course %></li>
+                        <% } %>
+                        </ul>
+                <%
+                    } else {
+                %>
+                        <p>You are not enrolled in any courses yet.</p>
+                <%
+                    }
+                %>  
                         <div class="profile_courses_box"> </div>
                     </a>
                 </div>

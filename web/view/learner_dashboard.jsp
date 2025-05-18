@@ -10,7 +10,7 @@
     <body class="site_layout">
         <nav class="site_layout_navbar">
             <div class="nav_profile">
-                <a class="nav_item" href="learner_profile.jsp">Username</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ProfileServlet?action=learner">Username</a>
             </div>
             <div class="nav_list">
                 <a class="nav_item" href="${pageContext.request.contextPath}/LearnerCourseServlet">Dashboard</a>

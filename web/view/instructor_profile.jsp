@@ -1,5 +1,5 @@
 <!-- Instructor's Profile -->
-
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,7 @@
     <body class="site_layout">
         <nav class="site_layout_navbar">
             <div class="nav_profile">
-                <a class="nav_item" href="instructor_profile.jsp">Username</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ProfileServlet?action=instructor">Username</a>
             </div>
             <div class="nav_list">
                 <a class="nav_item" href="instructor_dashboard.jsp">Dashboard</a>
@@ -35,6 +35,22 @@
                 <h2>Currently Instructing: </h2>
                 <div class="profile_courses"> <!-- Insert Instructing Courses -->
                     <a>
+                <%
+                    List<String> enrolledCourses = (List<String>)request.getAttribute("availableCourses");
+                    if (enrolledCourses != null && !enrolledCourses.isEmpty()) {
+                %>
+                        <ul>
+                        <% for (String course : enrolledCourses) { %>
+                            <li><%= course %></li>
+                        <% } %>
+                        </ul>
+                <%
+                    } else {
+                %>
+                        <p>You are not an instructor in any course yet.</p>
+                <%
+                    }
+                %>  
                         <div class="profile_courses_box"> </div>
                     </a>
                     <a>
