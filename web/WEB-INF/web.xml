@@ -17,10 +17,6 @@
         <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
     </context-param>
     <servlet>
-        <servlet-name>error_404</servlet-name>
-        <servlet-class>error_404</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>Control.LoginServlet</servlet-class>
     </servlet>
