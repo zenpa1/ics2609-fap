@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Suez+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="<%= request.getContextPath()%>/css/styles.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath()%>/view/styles.css" />
         <title>ActiveLearningPH</title>
     </head>
     <body>
@@ -53,7 +53,9 @@
                 <div id="course-area" class="row text-center pt-3 justify-content-lg-center">
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/itil.png" class="card-img-top" alt="ITIL">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/uploads/2022/10/itil-ato-1.png" class="card-icon" alt="ITIL Training Philippines">
@@ -63,7 +65,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/java.png" class="card-img-top" alt="java">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/logo-course-java.jpg" class="card-icon" alt="Java">
@@ -73,7 +77,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/security.png" class="card-img-top" alt="Cybersecurity">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/logo-course-security.jpg" class="card-icon" alt="Cybersecurity">
@@ -83,7 +89,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/project-management.png" class="card-img-top" alt="Project Management">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/logo-course-project-management.jpg" class="card-icon" alt="Project Management">
@@ -93,7 +101,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/digital-transformation.png" class="card-img-top" alt="Digital Transformation">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/logo-course-digital-transformation.jpg" class="card-icon" alt="Digital Transformation">
@@ -103,7 +113,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/web-dev.png" class="card-img-top" alt="Web Development">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/themes/understrap-child/img/home/logo-course-web.jpg" class="card-icon" alt="Web Development">
@@ -113,17 +125,21 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
-                        <img src="https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/Excel-2013--hero-image-1_RE4n4fA?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=1920&qlt=90&fmt=png-alpha" class="card-img-top" alt="Microsoft Excel">
+                        <div class="card-img-container">
+                        <img src="https://activelearning.ph/wp-content/uploads/2022/05/microsoft-excel-home-logo.png" class="card-img-top" alt="Microsoft Excel">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/2203px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png" class="card-icon" alt="Microsoft Excel">
+                            <img src="https://activelearning.ph/wp-content/uploads/2022/05/microsoft-excel-logo.png" class="card-icon" alt="Microsoft Excel">
                             <br>
                             <span>Microsoft Excel</span>
                         </div>
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/uploads/2022/06/python-homepage.jpg" class="card-img-top" alt="Python Training Philippines">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/uploads/2019/03/Python-100x100-1.png" class="card-icon" alt="Python Training Philippines">
@@ -133,7 +149,9 @@
                     </div>
                     <div class="course-card">
                         <!-- Card Image -->
+                        <div class="card-img-container">
                         <img src="https://activelearning.ph/wp-content/uploads/2022/06/microsoft-azure-homepage.png" class="card-img-top" alt="Microsoft Azure Training Philippines">
+                        </div>
                         <div class="card-body">
                             <!-- Course Logo -->
                             <img src="https://activelearning.ph/wp-content/uploads/2025/02/Microsoft-Azure-logo-100-x-100.png" class="card-icon" alt="Microsoft Azure Training Philippines">
