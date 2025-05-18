@@ -42,27 +42,27 @@
     </welcome-file-list>
     <error-page>
         <exception-type>model.InvalidCredentialsException</exception-type>
-        <location>/error/error_401.jsp</location>
+        <location>/view/error/error_401.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/error/error_404.jsp</location>
+        <location>/view/error/error_404.jsp</location>
     </error-page>
     <error-page>
         <error-code>403</error-code>
-        <location>/error/error_403.jsp</location>
+        <location>/view/error/error_403.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>500</error-code>
-        <location>/error/error_500.jsp</location>
+        <location>/view/error/error_500.jsp</location>
     </error-page>
     <error-page>
         <exception-type>model.SessionExpiredException</exception-type>
-        <location>/error/error_session_timeout.jsp</location>
+        <location>/view/error/error_session_timeout.jsp</location>
     </error-page>
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/error/error_general.jsp</location>
+        <location>/view/error/error_general.jsp</location>
     </error-page>
 </web-app>
