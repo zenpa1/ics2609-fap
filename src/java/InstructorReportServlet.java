@@ -158,7 +158,12 @@ public class InstructorReportServlet extends HttpServlet {
 			PdfWriter writer = PdfWriter.getInstance(doc, out);
 
 			// Set header and footer with text from web.xml
-			writer.setPageEvent(new PdfHeaderFooter(loggedInUser, pdfHeaderText, pdfFooterText));
+			writer.setPageEvent(
+					new PdfHeaderFooter(
+							loggedInUser,
+							getServletContext().getInitParameter("pdfHeaderText"),
+							getServletContext().getInitParameter("pdfFooterText")
+					));
 
 			// --- actual content start
 			doc.open();
@@ -172,14 +177,13 @@ public class InstructorReportServlet extends HttpServlet {
 
 			// Rest of your existing PDF generation code...
 			// [Keep all your existing table and data generation code here]
-			
 			// Body
 			float[] relativeColWidths = {5F, 1};
 			PdfPTable bodyTable = new PdfPTable(relativeColWidths);
 
 			bodyTable.addCell("Username");
 			bodyTable.addCell("Role");
-			
+
 			ResultSet results = db.runQuery("SELECT USERNAME,ROLE FROM UsersDB");
 			while (results.next()) {
 				String username = results.getString("USERNAME");
