@@ -15,7 +15,9 @@ DOUBLE CHECK IN DB IF ITS ADDED || DONE
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -46,18 +48,18 @@ public class LearnerCourseServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String action = request.getParameter("action");
-        String username = "user1@example.com"; // Replace with session username getter LATER T_T 
+        String username = "user2@example.com"; // Replace with session username getter LATER T_T 
         
         try {
             if (action == null) {
                 // Function 1: Display enrolled courses
-                List<String> enrolledCourses = getEnrolledCourses(username);
+                List<Map<String, String>> enrolledCourses = getEnrolledCourses(username);
                 request.setAttribute("enrolledCourses", enrolledCourses);
                 request.getRequestDispatcher("/view/learner_dashboard.jsp").forward(request, response);
             } 
             else if (action.equals("viewAvailable")) {
                 // Function 2: Display available courses (not enrolled)
-                List<String> availableCourses = getAvailableCourses(username);
+                List<Map<String, String>> availableCourses = getAvailableCourses(username);
                 request.setAttribute("availableCourses", availableCourses);
                 request.getRequestDispatcher("/view/learner_courses.jsp").forward(request, response);
             } 
@@ -65,7 +67,7 @@ public class LearnerCourseServlet extends HttpServlet {
                 // Function 3: Enroll in a course
                 String courseName = request.getParameter("courseName");
                 enrollInCourse(username, courseName);
-                List<String> availableCourses = getAvailableCourses(username);
+                List<Map<String, String>> availableCourses = getAvailableCourses(username);
                 request.setAttribute("availableCourses", availableCourses);
                 request.getRequestDispatcher("/view/learner_courses.jsp").forward(request, response);
             }
@@ -75,36 +77,47 @@ public class LearnerCourseServlet extends HttpServlet {
     }
     
     // Method to get enrolled courses
-    private List<String> getEnrolledCourses(String username) throws SQLException {
-        List<String> courses = new ArrayList<>();
-        String query = "SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME = ?";
+    private List<Map<String, String>> getEnrolledCourses(String username) throws SQLException {
+        List<Map<String, String>> courseList = new ArrayList<>();
+        String query = "SELECT c.COURSE_NAME, c.COURSE_INSTRUCTOR, c.SCHEDULE " +
+                   "FROM COURSEDB c " +
+                   "JOIN COURSE_LEARNERS cl ON c.COURSE_NAME = cl.COURSE_NAME " +
+                   "WHERE cl.USERNAME = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    courses.add(rs.getString("COURSE_NAME"));
+                    Map<String, String> course = new HashMap<>();
+                    course.put("name", rs.getString("COURSE_NAME"));
+                    course.put("instructor", rs.getString("COURSE_INSTRUCTOR"));
+                    course.put("schedule", rs.getString("SCHEDULE"));
+                    courseList.add(course);
                 }
             }
         }
-        return courses;
+        return courseList;
     }
     
     // Helper method to get available courses (not enrolled)
-    private List<String> getAvailableCourses(String username) throws SQLException {
-        List<String> courses = new ArrayList<>();
-        String query = "SELECT COURSE_NAME FROM COURSEDB WHERE COURSE_NAME NOT IN " +
+    private List<Map<String, String>> getAvailableCourses(String username) throws SQLException {
+        List<Map<String, String>> courseList = new ArrayList<>();
+        String query = "SELECT COURSE_NAME, COURSE_INSTRUCTOR, SCHEDULE FROM COURSEDB WHERE COURSE_NAME NOT IN " +
                   "(SELECT COURSE_NAME FROM COURSE_LEARNERS WHERE USERNAME = ?)";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    courses.add(rs.getString("COURSE_NAME"));
+                    Map<String, String> course = new HashMap<>();
+                    course.put("name", rs.getString("COURSE_NAME"));
+                    course.put("instructor", rs.getString("COURSE_INSTRUCTOR"));
+                    course.put("schedule", rs.getString("SCHEDULE"));
+                    courseList.add(course);
                 }
             }
         }
-        return courses;
+        return courseList;
     }
     
     // Helper method to enroll in a course

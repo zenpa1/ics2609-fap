@@ -13,7 +13,7 @@ public class UserCheck {
     public static String validateUser(String username, String password, ServletContext context) {
         String role = null;
 
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM USER_INFO WHERE username=? AND password=?")) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM USERSDB WHERE username=? AND password=?")) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -29,7 +29,7 @@ public class UserCheck {
     
     public static List<User> getAllUsers(ServletContext context) {
         List<User> userList = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT username, password, role FROM USER_INFO"); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT username, password, role FROM USERSDB"); ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {
                 String username = rs.getString("username");
@@ -46,7 +46,7 @@ public class UserCheck {
     
     public static boolean usernameExists(String username, ServletContext context) {
         boolean exists = false;  
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT username FROM USER_INFO WHERE username = ?")) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT username FROM USERSDB WHERE username = ?")) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             exists = rs.next(); // If a result exists, username is in DB
@@ -58,7 +58,7 @@ public class UserCheck {
     
     public static String getPassword(String username, ServletContext context) {
         String password = null;
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT password FROM USER_INFO WHERE username = ?")) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT password FROM USERSDB WHERE username = ?")) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -72,7 +72,7 @@ public class UserCheck {
     
     public static String getUserRole(String username, ServletContext context) {
         String role = null;
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT role FROM USER_INFO WHERE username = ?")) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("SELECT role FROM USERSDB WHERE username = ?")) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -85,7 +85,7 @@ public class UserCheck {
     }
     
     public static boolean createUser(String username, String password, String role, ServletContext context) {
-        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("INSERT INTO USER_INFO (username, password, role) VALUES (?, ?, ?)")) {
+        try (Connection conn = DBConnection.getConnection(context); PreparedStatement stmt = conn.prepareStatement("INSERT INTO USERSDB (username, password, role) VALUES (?, ?, ?)")) {
 
             stmt.setString(1, username);
             stmt.setString(2, password);
