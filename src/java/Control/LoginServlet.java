@@ -73,10 +73,10 @@ public class LoginServlet extends HttpServlet {
             
          // Error Redirect  
         } catch (InvalidCredentialsException e) {
-            response.sendRedirect("view/error_401.jsp"); // General Rejection
+            response.sendRedirect("view/eror/error_401.jsp"); // General Rejection
         }  catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("view/error_401.jsp"); // yes, you failed.
+            response.sendRedirect("view/error/error_401.jsp"); // yes, you failed.
         }
     }
      

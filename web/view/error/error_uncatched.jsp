@@ -27,7 +27,7 @@
                 <p class="error-message">
                     Oops! Something went wrong, and we couldn't process your request.
                     <br>
-                    Please try again later or g back to homepage
+                    Please try again later or go back to homepage
                 </p>
                 <form action="<%= request.getContextPath()%>/index.jsp" method="post">
                     <button type="submit" class="error-button">Go Back to Home</button>

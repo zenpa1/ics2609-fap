@@ -35,7 +35,7 @@ public class ScheduleServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String action = request.getParameter("action");
-        String username = "user1@example.com";
+        String username = "user26@example.com";
         
         try {
             List<Map<String, String>> courseList = new ArrayList<>();

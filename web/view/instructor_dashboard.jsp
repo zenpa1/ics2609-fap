@@ -3,128 +3,51 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Instructor's Dashboard</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                padding: 2rem;
-                background-color: #f9f9f9;
-            }
-            h2 {
-                margin-bottom: 1rem;
-            }
-            .message {
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 5px;
-            }
-            .success {
-                background-color: #d4edda;
-                color: #155724;
-            }
-            .error {
-                background-color: #f8d7da;
-                color: #721c24;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 2rem;
-            }
-            th, td {
-                border: 1px solid #ccc;
-                padding: 0.75rem;
-                text-align: left;
-            }
-            th {
-                background-color: #3498db;
-                color: white;
-            }
-            input[type="text"], input[type="time"] {
-                padding: 0.5rem;
-                width: 100%;
-            }
-            form {
-                margin-bottom: 2rem;
-            }
-            button {
-                background-color: #3498db;
-                color: white;
-                padding: 0.5rem 1rem;
-                border: none;
-                margin-right: 5px;
-                border-radius: 3px;
-                cursor: pointer;
-            }
-            .delete-btn {
-                background-color: #e74c3c;
-            }
-        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Suez+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="<%= request.getContextPath()%>/css/styles.css" />
     </head>
-    <body>
-
+    <body class="site_layout">
+        <nav class="site_layout_navbar">
+            <div class="nav_profile">
+                <img src="https://activelearning.ph/wp-content/uploads/2021/03/logo-white.png" class="logo-nav" alt="ActiveLearningPH">
+                <a class="nav_item" href="instructor_profile.jsp">Username</a>
+            </div>
+            <div class="nav_list">
+                <a class="nav_item" href="${pageContext.request.contextPath}/view/instructor_dashboard.jsp">Dashboard</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/DatabaseServlet">Learner's Database</a>
+                <a class="nav_item" href="${pageContext.request.contextPath}/ScheduleServlet?action=instructor">Schedule</a>
+            </div>
+            <div class="nav_logout">
+                <a class="nav_item" href="${pageContext.request.contextPath}/view/instructor_logout.jsp">Logout</a>
+            </div>
+        </nav>
+        <div class="site_layout_body"> 
+            <div class="instructor_dashboard_layout">
+                <div class="site_body_header_horizontal">
+                    <button class="btn-site-body-header">Create Course</button>
+                    <button class="btn-site-body-header">Delete Course</button>
+                </div>
+                <div class="instructor_dashboard_main"> <!-- Insert CRUD BOXES here -->
+                    <a>
+                        <div class="courses_box"> 
+                            <button>Update Course</button>
+                        </div>
+                    </a>
+                    <a>
+                        <div class="courses_box">
+                            <button>Update Course</button>
+                        </div>
+                    </a>
+                </div>
         <h2>Instructor Dashboard</h2>
 
         <!-- Feedback Message -->
         <c:if test="${not empty message}">
             <div class="message ${messageType}">
                 ${message}
-            </div>
-        </c:if>
-
-        <!-- Add New Course Form -->
-        <h3>Create New Course</h3>
-        <form action="../CourseServlet" method="post">
-            <input type="hidden" name="action" value="create">
-            <label>Course Name:</label>
-            <input type="text" name="courseName" required>
-            <label>Instructor:</label>
-            <input type="text" name="instructor" required>
-            <label>Schedule (HH:mm or HH:mm:ss):</label>
-            <input type="text" name="schedule" required>
-            <button type="submit">Add Course</button>
-        </form>
-
-        <!-- Course Table -->
-        <h3>All Courses</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Course Name</th>
-                    <th>Instructor</th>
-                    <th>Schedule</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="course" items="${DatabaseConnector.getAllCourses()}">
-                    <tr>
-                        <td>${course.name}</td>
-                        <td>${course.instructor}</td>
-                        <td>${course.schedule}</td>
-                        <td>
-                            <!-- Update Form -->
-                            <form action="CourseServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="update">
-                                <input type="hidden" name="oldName" value="${course.name}">
-                                <input type="text" name="newName" value="${course.name}" required>
-                                <input type="text" name="instructor" value="${course.instructor}" required>
-                                <input type="text" name="newSchedule" value="${course.schedule}" required>
-                                <button type="submit">Update</button>
-                            </form>
-
-                            <!-- Delete Form -->
-                            <form action="CourseServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="courseName" value="${course.name}">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-
     </body>
 </html>
