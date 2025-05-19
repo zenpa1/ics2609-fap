@@ -1,25 +1,39 @@
 
-import java.util.List;
-import java.util.ArrayList;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-public class InstructorReportServlet extends HttpServlet {
-
-	private Connection conn;
-	private String pdfHeaderText;
-	private String pdfFooterText;
+public class DownloadScheduleServlet extends HttpServlet {
 
 	class PdfHeaderFooter extends PdfPageEventHelper {
 
@@ -106,25 +120,26 @@ public class InstructorReportServlet extends HttpServlet {
 		}
 	}
 
-	@Override
-	public void init(ServletConfig cfg) throws ServletException {
-		super.init(cfg);
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	/**
+	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+	 * methods.
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException if an I/O error occurs
+	 */
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("user") == null) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
-
-		String loggedInUser = (String) session.getAttribute("user");
 
 		try {
-			// Get course name from database
-			String courseName = "COURSELIST"; // default value
+
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+			String fileTimestamp = now.format(fileFormatter);
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-Disposition", "attachment;filename=schedule_" + fileTimestamp + ".pdf");
 
 			DatabaseConnector db = new DatabaseConnector();
 			ServletConfig cfg = getServletConfig();
@@ -137,21 +152,7 @@ public class InstructorReportServlet extends HttpServlet {
 					cfg.getInitParameter("dbUsername"),
 					cfg.getInitParameter("dbPassword")
 			);
-
-			ResultSet rs = db.runQuery("SELECT COURSE_NAME FROM COURSE_LEARNERS LIMIT 1");
-			if (rs.next()) {
-				courseName = rs.getString("COURSE_NAME");
-				courseName = courseName.replaceAll("[^a-zA-Z0-9]", "_");
-			}
-
-			// Generate timestamp for filename
-			SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-			String timestamp = fileDateFormat.format(new Date());
-			String filename = courseName + "_" + timestamp + ".pdf";
-
-			response.setContentType("application/pdf");
-			response.setHeader("Content-Disposition", "inline; filename=" + filename);
-
+			
 			// PDF Creation - Landscape
 			Document doc = new Document(PageSize.LETTER.rotate());
 			OutputStream out = response.getOutputStream();
@@ -160,52 +161,82 @@ public class InstructorReportServlet extends HttpServlet {
 			// Set header and footer with text from web.xml
 			writer.setPageEvent(
 					new PdfHeaderFooter(
-							loggedInUser,
+							(String) request.getSession(false).getAttribute("user"),
 							getServletContext().getInitParameter("pdfHeaderText"),
 							getServletContext().getInitParameter("pdfFooterText")
 					));
-
-			// --- actual content start
-			doc.open();
-
+			
 			// Title/header
 			Font titleFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 18);
-			Paragraph docTitle = new Paragraph("ACCOUNT DATABASE", titleFont);
+			Paragraph docTitle = new Paragraph("SCHEDULE", titleFont);
 			docTitle.setAlignment(Element.ALIGN_CENTER);
 			docTitle.setSpacingAfter(20f);
 			doc.add(docTitle);
 
-			// Rest of your existing PDF generation code...
-			// [Keep all your existing table and data generation code here]
-			// Body
-			float[] relativeColWidths = {5F, 1};
+			// --- actual content start
+			float[] relativeColWidths = {5F, 4F, 5F};
 			PdfPTable bodyTable = new PdfPTable(relativeColWidths);
-
-			bodyTable.addCell("Username");
-			bodyTable.addCell("Role");
-
-			ResultSet results = db.runQuery("SELECT USERNAME,ROLE FROM UsersDB");
-			while (results.next()) {
-				String username = results.getString("USERNAME");
-				bodyTable.addCell(new Phrase(username + (username.equals(loggedInUser) ? "* (current)" : "")));
-				bodyTable.addCell(new Phrase(results.getString("ROLE")));
+			
+			bodyTable.addCell("Course Name");
+			bodyTable.addCell("Instructor");
+			bodyTable.addCell("Schedule");
+			
+			ResultSet courses = db.runQuery("SELECT * FROM COURSEDB");
+			
+			while (courses.next()) {
+				bodyTable.addCell(courses.getString("COURSE_NAME"));
+				bodyTable.addCell(courses.getString("COURSE_INSTRUCTOR"));
+				bodyTable.addCell(courses.getString("COURSE_SCHEDULE"));
 			}
-
+			
 			doc.close();
 
-		} catch (DocumentException | SQLException ex) {
-			throw new ServletException("Error generating PDF report", ex);
-		}
-	}
+		} catch (DocumentException e) {
+			e.printStackTrace();
 
-	@Override
-	public void destroy() {
-		try {
-			if (conn != null) {
-				conn.close();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+	/**
+	 * Handles the HTTP <code>GET</code> method.
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException if an I/O error occurs
+	 */
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
+
+	/**
+	 * Handles the HTTP <code>POST</code> method.
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
+
+	/**
+	 * Returns a short description of the servlet.
+	 *
+	 * @return a String containing servlet description
+	 */
+	@Override
+	public String getServletInfo() {
+		return "Short description";
+	}// </editor-fold>
+
 }
