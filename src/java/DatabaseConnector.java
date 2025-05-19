@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnector {
 	public Connection connection;
@@ -69,17 +71,51 @@ public class DatabaseConnector {
 		return null;
 	}
 
-	public String[] getCourseInfo(String courseName) throws SQLException {
+	public Course getCourseInfo(String courseName) throws SQLException {
 		PreparedStatement x = connection.prepareStatement("SELECT * FROM COURSE WHERE COURSE_NAME=?");
 		x.setString(1, courseName);
 		ResultSet results = x.executeQuery();
 		if (results.next())
-			return new String[]{
+			return new Course(
 				results.getString("COURSE_NAME"),
 				results.getString("COURSE_INSTRUCTOR"),
 				results.getString("SCHEDULE")
-			};
+                        );
 		else
-			return new String[] {"No course found."};
+			return null;
 	}
+        
+        public List<Course> getAllCourses() throws SQLException {
+            ResultSet counter = runQuery("SELECT COUNT(*) FROM COURSE");
+            
+            ArrayList<Course> courseList = new ArrayList();
+            while (counter.next()) {
+                courseList.add(
+                new Course(
+				counter.getString("COURSE_NAME"),
+				counter.getString("COURSE_INSTRUCTOR"),
+				counter.getString("SCHEDULE")
+                        )
+                );
+            }
+            
+            return courseList;
+        }
 }
+
+class Course {
+        private String name;
+        private String instructor;
+        private String schedule;
+
+        public Course(String name, String instructor, String schedule) {
+            this.name = name;
+            this.instructor = instructor;
+            this.schedule = schedule;
+        }
+
+        // Getters remain the same
+        public String getName() { return name; }
+        public String getInstructor() { return instructor; }
+        public String getSchedule() { return schedule; }
+    }
