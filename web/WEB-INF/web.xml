@@ -32,6 +32,10 @@
 		<servlet-name>CreateUserServlet</servlet-name>
 		<servlet-class>Control.CreateUserServlet</servlet-class>
 	</servlet>
+        <servlet>
+            <servlet-name>CourseServlet</servlet-name>
+            <servlet-class>CourseServlet</servlet-class>
+        </servlet>
 	<servlet>
 		<servlet-name>InstructorReportServlet</servlet-name>
 		<servlet-class>InstructorReportServlet</servlet-class>
@@ -93,6 +97,10 @@
 		<servlet-name>DownloadScheduleServlet</servlet-name>
 		<url-pattern>/DownloadScheduleServlet</url-pattern>
 	</servlet-mapping>
+        <servlet-mapping>
+            <servlet-name>CourseServlet</servlet-name>
+            <url-pattern>/CourseServlet</url-pattern>
+        </servlet-mapping>
 	<session-config>
 		<session-timeout>
 			30
